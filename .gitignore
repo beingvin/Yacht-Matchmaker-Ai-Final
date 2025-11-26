@@ -1,0 +1,16 @@
+# Python virtual environments (General)
+.venv/
+venv/
+**/__pycache__/
+
+# Project Specific (Your paths)
+backend/.env
+backend/.venv
+backend/yacht_agents/.venv
+backend/yacht_agents/.env
+backend/yacht_agents/__pycache__
+
+# Python Build and Dist
+build/
+dist/
+*.egg-info/
