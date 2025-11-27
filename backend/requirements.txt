@@ -1,1 +1,6 @@
 google-adk
+anyio
+python-dotenv
+pydantic
+fastapi 
+uvicorn

@@ -9,6 +9,7 @@ backend/.venv
 backend/yacht_agents/.venv
 backend/yacht_agents/.env
 backend/yacht_agents/__pycache__
+backend/yacht_agents/sub_agents/__pycache__
 
 # Python Build and Dist
 build/

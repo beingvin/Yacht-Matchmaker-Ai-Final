@@ -6,8 +6,8 @@ from google.adk.agents.llm_agent import Agent
 # from google.adk.models.google_llm import Gemini
 # from google.adk.sessions import DatabaseSessionService
 from google.adk.runners import InMemoryRunner
-from sub_agents.needs_interpreter_agent import needs_interpreter_agent
-from sub_agents.planning_agent import planning_agent
+from .sub_agents.needs_interpreter_agent import needs_interpreter_agent
+from .sub_agents.planning_agent import planning_agent
 from google.adk.tools import AgentTool, FunctionTool
 
 
@@ -46,8 +46,8 @@ root_agent = Agent(
     instruction="""You are the Supervisor Agent for the Yacht Matchmaker AI system.
 
                 Your responsibilities:
-                1. Receive user messages and coordinate all with sub agents.
-                2. ALWAYS call needs_agent_tool first to convert the user text into structured JSON.
+                1. First confirm the location ( mumbai or goa ), date, time, duration, number of guests, occasion, budget, and any special requirements from the user and coordinate all with sub agents.
+                2. ALWAYS call needs_agent_tool first to convert the user input into structured JSON.
                 3. After interpretation, call the planning_agent_tool to get the below plan:
                 - ThemeAgent: for theme, music, decor, vibe
                 - RouteAgent: for route options and timing
@@ -85,49 +85,49 @@ root_agent = Agent(
 )
 
 # --- 4. Interactive Execution Loop ---
-if __name__ == "__main__":
-    # Create the runner once (this holds the agent instance)
-    runner = InMemoryRunner(agent=root_agent)
+# if __name__ == "__main__":
+#     # Create the runner once (this holds the agent instance)
+#     runner = InMemoryRunner(agent=root_agent)
     
-    print("--------------------------------------------------")
-    print("⚓ Yacht Matchmaker Online. Type 'exit' to quit.")
-    print("--------------------------------------------------")
+#     print("--------------------------------------------------")
+#     print("⚓ Yacht Matchmaker Online. Type 'exit' to quit.")
+#     print("--------------------------------------------------")
 
-    async def chat_loop():
-        # Ideally, we maintain a session ID if the Runner supports it, 
-        # but for local testing, many runners keep internal state or we pass history.
-        # If the agent 'forgets' context, we can add explicit session handling later.
+#     async def chat_loop():
+#         # Ideally, we maintain a session ID if the Runner supports it, 
+#         # but for local testing, many runners keep internal state or we pass history.
+#         # If the agent 'forgets' context, we can add explicit session handling later.
         
-        while True:
-            try:
-                user_input = input("\nYou: ").strip()
+#         while True:
+#             try:
+#                 user_input = input("\nYou: ").strip()
                 
-                if not user_input:
-                    continue
+#                 if not user_input:
+#                     continue
                     
-                if user_input.lower() in ["exit", "quit"]:
-                    print("👋 Fair winds! Closing session.")
-                    break
+#                 if user_input.lower() in ["exit", "quit"]:
+#                     print("👋 Fair winds! Closing session.")
+#                     break
                 
-                print("Thinking... ⏳")
+#                 print("Thinking... ⏳")
                 
-                # Run the agent
-                result = await runner.run_debug(user_input)
+#                 # Run the agent
+#                 result = await runner.run_debug(user_input)
                 
-                # Print response
-                # print(f"🤖 Agent: {result.text}")
+#                 # Print response
+#                 # print(f"🤖 Agent: {result.text}")
                 
-            except KeyboardInterrupt:
-                print("\n👋 Force Quit.")
-                break
-            except Exception as e:
-                print(f"❌ Error: {e}")
+#             except KeyboardInterrupt:
+#                 print("\n👋 Force Quit.")
+#                 break
+#             except Exception as e:
+#                 print(f"❌ Error: {e}")
 
-    # Run the loop
-    asyncio.run(chat_loop())
+#     # Run the loop
+#     asyncio.run(chat_loop())
 
 
-# runner = InMemoryRunner(agent=supervisor)
+# runner = InMemoryRunner(agent=root_agent)
 # print("✅ Runner created.")
 
 # # run the async call in a sync script
