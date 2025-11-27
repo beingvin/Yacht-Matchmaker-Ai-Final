@@ -1,0 +1,95 @@
+[
+  {
+    "id": "t001",
+    "theme_name": "Romantic Sunset",
+    "vibe_tags": ["romantic", "sunset", "calm"],
+    "occasion_tags": ["anniversary", "proposal", "couple"],
+    "decor": [
+      "rose petals on table",
+      "soft warm lantern lights",
+      "candle-style LED lights",
+      "white & gold drape accents"
+    ],
+    "music_keywords": ["acoustic love", "soft pop", "lofi romance"],
+    "mood_description": "A warm, intimate setting for couples with soft music and sunset lighting.",
+    "food_and_drinks": ["fruit platter", "mocktails", "light snacks"],
+    "recommended_timing": "Start 1 hour before sunset"
+  },
+  {
+    "id": "t002",
+    "theme_name": "Party Night",
+    "vibe_tags": ["party", "energetic", "night"],
+    "occasion_tags": ["bachelor", "bachelorette", "birthday"],
+    "decor": [
+      "LED strip lighting",
+      "balloons",
+      "mini party laser lights",
+      "neon accents"
+    ],
+    "music_keywords": ["EDM", "bollywood party", "punjabi hits"],
+    "mood_description": "High-energy party atmosphere with bold lighting and upbeat music.",
+    "food_and_drinks": ["chips & snacks", "soft drinks", "mocktails"],
+    "recommended_timing": "Evening or night departure"
+  },
+  {
+    "id": "t003",
+    "theme_name": "Family Chillout",
+    "vibe_tags": ["family", "relaxed", "chill"],
+    "occasion_tags": ["family hangout", "birthday", "kids"],
+    "decor": [
+      "soft pastel cushions",
+      "light drapes",
+      "comfort seating setup"
+    ],
+    "music_keywords": ["retro bollywood", "acoustic chill", "soft pop"],
+    "mood_description": "Comfortable relaxed setup for families with soft music and spacious decor.",
+    "food_and_drinks": ["veg snacks", "soft drinks", "light bites"],
+    "recommended_timing": "Anytime between morning to sunset"
+  },
+  {
+    "id": "t004",
+    "theme_name": "Luxury Premium",
+    "vibe_tags": ["luxury", "premium", "exclusive"],
+    "occasion_tags": ["corporate", "anniversary", "vip"],
+    "decor": [
+      "gold accents",
+      "lantern lighting",
+      "white drapes",
+      "premium table setup"
+    ],
+    "music_keywords": ["deep house", "international lounge", "soft electronic"],
+    "mood_description": "An elite premium vibe with minimal gold-toned decor and classy lounge music.",
+    "food_and_drinks": ["premium snacks", "fresh juices", "mocktails"],
+    "recommended_timing": "Golden hour or night cruise"
+  },
+  {
+    "id": "t005",
+    "theme_name": "Adventure & Nature",
+    "vibe_tags": ["adventure", "nature", "outdoor"],
+    "occasion_tags": ["snorkeling", "day trip", "exploration"],
+    "decor": [
+      "minimal natural setup",
+      "marine-blue mats",
+      "utility deck arrangement"
+    ],
+    "music_keywords": ["tropical chill", "beach vibes", "indie acoustic"],
+    "mood_description": "An energetic outdoorsy vibe focused on exploring ocean routes and nature.",
+    "food_and_drinks": ["energy bars", "water bottles", "light snacks"],
+    "recommended_timing": "Morning or early afternoon"
+  },
+  {
+    "id": "t006",
+    "theme_name": "Serene Sunrise Cruise",
+    "vibe_tags": ["calm", "serene", "sunrise"],
+    "occasion_tags": ["couple", "family", "wellness"],
+    "decor": [
+      "warm soft lights",
+      "white cushions",
+      "minimalistic pastel palette"
+    ],
+    "music_keywords": ["morning meditation", "calm acoustic", "lofi sunrise"],
+    "mood_description": "A peaceful sunrise theme with soothing decor and calm early morning music.",
+    "food_and_drinks": ["tea/coffee", "light breakfast snacks"],
+    "recommended_timing": "Start at sunrise"
+  }
+]
