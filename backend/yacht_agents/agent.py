@@ -2,14 +2,15 @@
 import asyncio
 from dotenv import load_dotenv
 
-from google.adk.agents.llm_agent import Agent
+from google.adk.agents import Agent, SequentialAgent
 # from google.adk.models.google_llm import Gemini
 # from google.adk.sessions import DatabaseSessionService
 from google.adk.runners import InMemoryRunner
 from .sub_agents.needs_interpreter_agent import needs_interpreter_agent
-from .sub_agents.planning_agent import planning_agent
-from google.adk.tools import AgentTool, FunctionTool
-
+from .sub_agents.planning_agents import planning_agent
+from .sub_agents.compilation_agent import compilation_agent
+from .sub_agents.presentation_agent import presentation_agent
+from google.adk.tools import AgentTool
 
 import warnings
 # Ignore all warnings
@@ -19,72 +20,64 @@ import logging
 logging.basicConfig(level=logging.ERROR)
 
 
-
-# load .env (optional; or set GOOGLE_API_KEY in env)
+# --- 1. # load .env (optional; or set GOOGLE_API_KEY in env)
 load_dotenv()
 
 
-
-# Example using a local SQLite file:
+# --- 2. # Example using a local SQLite file:
 # db_url = "sqlite:///./my_agent_data.db"
 # session_service = DatabaseSessionService(db_url=db_url)
 
 
-
+# --- 3. # Set LLM model 
 gemini_model = "gemini-2.0-flash"
 
-# --- 3. Supervisor (Router) ---
 
-needs_agent_tool = AgentTool(agent=needs_interpreter_agent)
-planning_agent_tool = AgentTool(agent=planning_agent)
+# --- 4. # This pipeline runs the full automation Sequential Workflow : Needs -> Plan -> Present
+
+sequential_agent = SequentialAgent(
+    name="planningPipeline",
+    sub_agents=[needs_interpreter_agent, planning_agent, compilation_agent, presentation_agent],
+)
 
 
+# --- 5. # Agentic Tools
+sequential_agent_tool = AgentTool( agent=sequential_agent )
+
+
+# --- 6. Supervisor Agent (Root Agent) ---
 
 root_agent = Agent(
     name="Supervisor",
     model=gemini_model,
-    instruction="""You are the Supervisor Agent for the Yacht Matchmaker AI system.
-
-                Your responsibilities:
-                1. First confirm the location ( mumbai or goa ), date, time, duration, number of guests, occasion, budget, and any special requirements from the user and coordinate all with sub agents.
-                2. ALWAYS call needs_agent_tool first to convert the user input into structured JSON.
-                3. After interpretation, call the planning_agent_tool to get the below plan:
-                - ThemeAgent: for theme, music, decor, vibe
-                - RouteAgent: for route options and timing
-                - SafetyAgent: for weather, tides, safetyScore
-                - PricingAgent: for cost breakdown and budgetFit
-                - EvaluatorAgent: overall feasibility scoring
-                - PresentationAgent: to generate Google Slides or formatted itinerary text
-
-                Core Workflow:
-                1. User input → NeedsInterpreter → parsed JSON.
-                2. Based on parsed JSON:
-                - Call planning_agent_tool
-                3. Collect all agent outputs.
-                4. Call EvaluatorAgent to validate feasibility and compute scores:
-                - safety score
-                - vibe match score
-                - budget match score
-                5. If the user said “generate slides”, or “presentation”, or “make deck”, call PresentationAgent.
-                6. Otherwise, Return a clean itinerary summary OR a slide deck link (if PresentationAgent invoked).
-
-                Rules:
-                - Do NOT interpret user text yourself; always rely on NeedsInterpreter.
-                - Use other agents only after NeedsInterpreter output is available.
-                - ALWAYS wait for each agent’s output before calling the next.
-                - Combine outputs into a clear final plan unless PresentationAgent is requested.
-                - Include: yacht details, theme, route, safety window, pricing, and evaluator feedback.
-                - Keep your final message concise unless the user asks for full detail.
-                - Maintain observability: briefly state which agents were used in this run.
-
-                Your output to the user should be:
-                - A human-friendly itinerary OR
-                - A link/confirmation from PresentationAgent if slides were generated.
+    instruction="""You are the Supervisor Agent for the Yacht Matchmaker AI system. 
+                
+                **Primary Role:** Be the user-facing coordinator. **Do not run the pipeline until you have confirmed ALL required booking details with the user.**
+                
+                **Required Details (Must be Explicitly Confirmed):**
+                - **location** (e.g., Mumbai or Goa)
+                - **date** (YYYY-MM-DD) or date range
+                - **start time** (HH:MM) or time window
+                - **duration** in hours (numeric)
+                - **number of guests** (numeric)
+                - **occasion** (e.g., bachelor, family, corporate)
+                - **budget** (numeric) or budget range
+                
+                **Behavior Rules:**
+                1.  **If any required detail is missing** or ambiguous from the conversation history, ask a **single clear follow-up question** requesting the missing detail(s). Wait for the user's response and re-check.
+                2.  **Do NOT call any tools while required details are missing.**
+                3.  **When ALL required details are confirmed**, call the `sequential_agent_tool` tool. Your input to the tool must be the **FULL combined user brief** summarizing all confirmed details.
+                4.  The pipeline will return the final itinerary. Review it, make any necessary final formatting changes, and present the complete, charismatic itinerary to the user.
+                
+                **Tool Logic:**
+                * `sequential_agent_tool` tool (Sequential flow: NeedsInterpreter → PlanningAgent → PresentationAgent).
+                * The PlanningAgent internally handles the parallel flow (YachtSelector → Theme → Route → Safety → Pricing).
                 """,
-     tools=[needs_agent_tool, planning_agent_tool]
+    tools=[sequential_agent_tool]
 )
 
-# --- 4. Interactive Execution Loop ---
+# --- 7. Interactive Execution Loop ---
+
 # if __name__ == "__main__":
 #     # Create the runner once (this holds the agent instance)
 #     runner = InMemoryRunner(agent=root_agent)
@@ -126,11 +119,11 @@ root_agent = Agent(
 #     # Run the loop
 #     asyncio.run(chat_loop())
 
-
+# --- 8. Runner 
 # runner = InMemoryRunner(agent=root_agent)
 # print("✅ Runner created.")
 
-# # run the async call in a sync script
+# --- 9. run the async call in a sync script
 # async def main():
 #     response = await runner.run_debug(
 #         "i need yacht for new year party on 31/12/2025 in goa , budget 30k and we are 5 people"
