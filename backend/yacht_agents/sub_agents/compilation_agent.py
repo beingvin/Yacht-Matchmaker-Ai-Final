@@ -4,7 +4,7 @@ from .custom_tools import get_total_price
 
 
 
-# --- 1. # Set LLM model 
+# --- 1. # LLM model 
 gemini_model = "gemini-2.0-flash"
 
 

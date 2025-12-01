@@ -1,6 +1,6 @@
 from google.adk.agents.llm_agent import Agent
 
-# --- 1. # Set LLM model 
+# --- 1. # LLM model 
 gemini_model = "gemini-2.0-flash"
 
 

@@ -1,10 +1,10 @@
 from google.adk.agents import Agent, ParallelAgent
-from google.adk.tools import AgentTool ,FunctionTool
+from google.adk.tools import AgentTool ,FunctionTool, google_search
 from .custom_tools import search_weather, get_available_yachts, get_available_themes
 
 
 
-# --- 1. # Set LLM model 
+# --- 1. # LLM model 
 gemini_model = "gemini-2.0-flash"
     
 
@@ -63,20 +63,34 @@ theme_agent = Agent(
 safety_agent= Agent(
     name="SafetyAgent",
     model=gemini_model, # Reasoning Power
-       instruction=f"""
-                You are the Safety Officer. Your task is to check the weather and provide essential safety advice.
+    #    instruction=f"""
+    #             You are the Safety Officer. Your task is to check the weather and provide essential safety advice.
                 
-                **User Requirements (Input):** {{user_requirements}}
+    #             **User Requirements (Input):** {{user_requirements}}
                 
-                1. Use the `weather_tool` with the `location` and `date` from the requirements to get the forecast.
-                2. Based on the **{{user_requirements}}** (especially time) and the **weather forecast**, compile a list of **5 mandatory, key safety tips** that are highly relevant to the guest's safety, focusing on actions the Guest must take (e.g., adapting tips for daytime/nighttime, weather, and general safety protocols like following crew instructions, using handrails, securing items).
-                3. Your final response MUST be a single, structured summary. Do not use JSON or markdown headings. Use the following two section titles exactly:
-                   - Weather Forecast
-                   - Mandatory Safety Tips for the Guest
-                """,
+    #             1. Use the `weather_tool` with the `location` and `date` from the requirements to get the forecast.
+    #             2. Based on the **{{user_requirements}}** (especially time) and the **weather forecast**, compile a list of **5 mandatory, key safety tips** that are highly relevant to the guest's safety, focusing on actions the Guest must take (e.g., adapting tips for daytime/nighttime, weather, and general safety protocols like following crew instructions, using handrails, securing items).
+    #             3. Your final response MUST be a single, structured summary. Do not use JSON or markdown headings. Use the following two section titles exactly:
+    #                - Weather Forecast
+    #                - Mandatory Safety Tips for the Guest
+    #             """,
+    instruction=f"""
+        You are the highly diligent **Safety and Feasibility Officer**. Your primary task is to assess the safety of the planned yacht charter.
+
+        **User Requirements (Input):** {{user_requirements}}
+
+        1.  **Use the `Google Search` tool** to find the current or expected weather, tide, and any relevant safety advisories (e.g., travel warnings, local port restrictions) for the `location` and `date` specified in the User Requirements.
+        2.  Based on the **{{user_requirements}}** (especially time, occasion, and location) and the **search results**, compile a list of **5 mandatory, key safety tips** that are highly relevant to the guest's specific situation. Focus on actions the Guest must take (e.g., adapting tips for night cruising, rough seas, local regulations, etc.).
+        3.  Do not make up weather or safety information; rely on the search results for specific, grounded advice.
+        4.  Your final response MUST be a single, structured summary. Do not use JSON or markdown headings. Use the following two section titles exactly:
+            - **Current Advisories and Forecast**
+            - **Mandatory Safety Tips for the Guest**
+        """,
+    
     # input_key="user_requirements", # Explicitly consumes the JSON from NeedsInterpreter
     output_key="safety_summary", # Saves summary to state
-    tools=[weather_tool]
+    # tools=[weather_tool]
+    tools=[google_search]
 )
 
 

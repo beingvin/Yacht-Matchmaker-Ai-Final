@@ -44,10 +44,10 @@ def get_available_themes() -> str:
 
 
 # --- 3c. Weather function
-def search_weather(location: str, date: str) -> str:
-    """    Retrieves the current and forecast weather conditions for the specified location and date. """
-    # (Mock for now - Connect to OpenMeteo later)
-    return f"Weather in {location} on {date}: Clear skies, Wind 10kn (Safe)."
+# def search_weather(location: str, date: str) -> str:
+#     """    Retrieves the current and forecast weather conditions for the specified location and date. """
+#     # (Mock for now - Connect to OpenMeteo later)
+#     return f"Weather in {location} on {date}: Clear skies, Wind 10kn (Safe)."
     
 
 # --- 3b. Price calculator function
